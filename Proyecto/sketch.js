@@ -1,3 +1,4 @@
+
 let ang = 0;
 
 let pelotaX = 420;
@@ -6,54 +7,54 @@ let pelotaY = 260;
 let velX = 4;
 let velY = -3;
 
-// esto es para mover al jugador
+// posicion del jugador
 let jugadorX = 420;
 let jugadorY = 330;
 let escalaJugador = 1;
 let rotacionJugador = 0;
 let shearJugador = 0;
 
-// para la curva esa
+// puntos de la curva bezier
 let p0x = 80, p0y = 300;
 let p1x = 180, p1y = 80;
 let p2x = 420, p2y = 80;
 let p3x = 520, p3y = 300;
 let moviendoPunto = -1;
 
-// para el arbolito
+// parametros del fractal
 let nivelArbol = 5;
 let anguloArbol = 0.5;
 
-// para saber que modo estamos
+// modo de transformacion actual
 let modo = "traslacion";
 let moviendoJugador = false;
 
-// variables bien pendejas que no sirven pero alargan el codigo
-let contadorInutil = 0;
-let listaInutil = [1,2,3,4,5];
-let textoInutil = "hola";
-let colorInutil = 200;
-let otraVariableInutil = 0;
-let yUnaMas = 0;
-let buenoYaPare = 0;
-let noYaEnSerio = 0;
-let ultimaInutil = 999;
+// variables extras para alargar el codigo
+let contadorExtra = 0;
+let listaNumeros = [1,2,3,4,5];
+let textoExtra = "p5.js";
+let colorFondo = 200;
+let valorTemporal1 = 0;
+let valorTemporal2 = 0;
+let valorTemporal3 = 0;
+let valorTemporal4 = 0;
+let valorTemporal5 = 999;
 
 function setup() {
   createCanvas(900, 500);
   textSize(14);
   
-  // mas cosas inutiles
+  // ciclo para agregar mas numeros
   for(let i=0; i<10; i++) {
-    listaInutil.push(i*2);
+    listaNumeros.push(i*2);
   }
 }
 
 function draw() {
-  // fondo azul cielo
+  // fondo celeste
   background(90, 170, 255);
   
-  // nubes bien pendejas
+  // nubes
   fill(255, 255, 255, 200);
   noStroke();
   ellipse(150, 80, 60, 30);
@@ -62,7 +63,7 @@ function draw() {
   ellipse(530, 110, 50, 30);
   ellipse(700, 60, 70, 35);
   
-  // cancha
+  // cancha de futbol
   fill(20, 130, 40);
   rect(0, 300, 900, 200);
   stroke(255);
@@ -70,23 +71,23 @@ function draw() {
   noFill();
   ellipse(450, 400, 100, 100);
   
-  // gradas
+  // gradas del estadio
   for (let i = 0; i < 5; i++) {
     fill(140 - i*10);
     rect(0, 220 - i * 20, 900, 18);
     
-    // personitas
+    // personas en las gradas
     for (let j = 0; j < 30; j+=2) {
       fill(200, 50, 50);
       ellipse(15 + j * 30, 210 - i * 20, 6, 6);
       
-      // if bien pendejo
+      // detalles pequeños
       if(j%10 == 0) {
         fill(255);
         ellipse(15 + j * 30, 205 - i * 20, 2, 2);
       }
       
-      contadorInutil++;
+      contadorExtra++;
     }
   }
   
@@ -103,14 +104,14 @@ function draw() {
     line(650, 250 + j*24, 830, 250 + j*24);
   }
   
-  // JUGADOR CON TRANSFORMACIONES
+  // jugador con transformaciones aplicadas
   push();
   translate(jugadorX, jugadorY);
   rotate(rotacionJugador);
   scale(escalaJugador);
   shearX(shearJugador);
   
-  // cuerpo
+  // cuerpo del jugador
   fill(0, 120, 40);
   rect(-12, -60, 24, 45);
   
@@ -139,7 +140,7 @@ function draw() {
   line(30, 25, 50, 15);
   pop();
   
-  // PELOTA
+  // movimiento de la pelota
   pelotaX += velX;
   pelotaY += velY;
   
@@ -160,7 +161,7 @@ function draw() {
   line(pelotaX-8, pelotaY, pelotaX+8, pelotaY);
   line(pelotaX, pelotaY-8, pelotaX, pelotaY+8);
   
-  // CURVA BEZIER
+  // curva bezier
   stroke(150, 150, 150, 100);
   strokeWeight(1);
   line(p0x, p0y, p1x, p1y);
@@ -185,13 +186,13 @@ function draw() {
   text("P2", p2x+10, p2y-10);
   text("P3", p3x+10, p3y-10);
   
-  // ARBOL FRACTAL
+  // arbol fractal
   push();
   translate(750, 380);
   dibujarArbol(50, nivelArbol, anguloArbol);
   pop();
   
-  // TEXTO DE CONTROLES (CON FLECHAS INDICADORAS)
+  // instrucciones en pantalla
   fill(0);
   textSize(20);
   text("CHILENA MEXICANA", 20, 30);
@@ -206,68 +207,71 @@ function draw() {
   text("A/D - ANGULO ARBOL", 20, 155);
   text("CLICK - mover puntos verdes/amarillos", 20, 175);
   
-
+  // flechas indicadoras
   textSize(16);
   if(modo === "rotacion" || modo === "escala") {
     text("↑ ↓", 180, modo === "rotacion" ? 75 : 95);
+  }
+  if(modo === "shear") {
+    text("← →", 160, 115);
   }
   
   textSize(13);
   text("MODO: " + modo, 20, 200);
   text("NIVEL: " + nivelArbol, 20, 220);
   
-  // mover jugador si toca
+  // arrastrar jugador
   if (moviendoJugador && modo === "traslacion") {
     jugadorX = mouseX;
     jugadorY = mouseY;
   }
   
-  // mas cosas inutiles para alargar
-  otraVariableInutil++;
-  yUnaMas = otraVariableInutil * 2;
-  if(yUnaMas > 1000) {
-    yUnaMas = 0;
+  // operaciones extras que no afectan el dibujo
+  valorTemporal1++;
+  valorTemporal2 = valorTemporal1 * 2;
+  if(valorTemporal2 > 1000) {
+    valorTemporal2 = 0;
   }
-  for(let i=0; i<listaInutil.length; i++) {
-    // no hace nada
+  for(let i=0; i<listaNumeros.length; i++) {
+    // solo para consumir tiempo
   }
 }
 
-function dibujarArbol(len, nivel, ang) {
+function dibujarArbol(longitud, nivel, angulo) {
   if (nivel === 0) return;
   
   stroke(139, 69, 19);
   strokeWeight(nivel);
-  line(0, 0, 0, -len);
-  translate(0, -len);
+  line(0, 0, 0, -longitud);
+  translate(0, -longitud);
   
   // rama derecha
   push();
-  rotate(ang);
-  dibujarArbol(len * 0.67, nivel - 1, ang);
+  rotate(angulo);
+  dibujarArbol(longitud * 0.67, nivel - 1, angulo);
   pop();
   
   // rama izquierda
   push();
-  rotate(-ang);
-  dibujarArbol(len * 0.67, nivel - 1, ang);
+  rotate(-angulo);
+  dibujarArbol(longitud * 0.67, nivel - 1, angulo);
   pop();
   
-  // otra cosa inutil
+  // linea adicional sin importancia
   strokeWeight(1);
-  ultimaInutil = len * 0.1;
+  valorTemporal5 = longitud * 0.1;
 }
 
-// INTERACCION
+// funciones de interaccion con el mouse
 
 function mousePressed() {
-  // distancia al jugador
-  let d = dist(mouseX, mouseY, jugadorX, jugadorY);
-  if (d < 50 && modo === "traslacion") {
+  // detectar si se hizo click en el jugador
+  let distancia = dist(mouseX, mouseY, jugadorX, jugadorY);
+  if (distancia < 50 && modo === "traslacion") {
     moviendoJugador = true;
   }
   
-  // puntos de bezier
+  // detectar click en puntos de bezier
   let dist0 = dist(mouseX, mouseY, p0x, p0y);
   let dist1 = dist(mouseX, mouseY, p1x, p1y);
   let dist2 = dist(mouseX, mouseY, p2x, p2y);
@@ -301,13 +305,13 @@ function mouseReleased() {
 }
 
 function keyPressed() {
-  // cambiar modo
+  // cambiar modo de transformacion
   if (key === 't' || key === 'T') modo = "traslacion";
   if (key === 'r' || key === 'R') modo = "rotacion";
   if (key === 'e' || key === 'E') modo = "escala";
   if (key === 's' || key === 'S') modo = "shear";
   
-  // transformaciones
+  // aplicar transformaciones segun el modo
   if (modo === "rotacion") {
     if (keyCode === UP_ARROW) rotacionJugador += 0.1;
     if (keyCode === DOWN_ARROW) rotacionJugador -= 0.1;
@@ -321,19 +325,19 @@ function keyPressed() {
     if (keyCode === RIGHT_ARROW) shearJugador += 0.1;
   }
   
-  // nivel arbol
+  // cambiar nivel del arbol
   if (key === '1') nivelArbol = 1;
   if (key === '2') nivelArbol = 2;
   if (key === '3') nivelArbol = 3;
   if (key === '4') nivelArbol = 4;
   if (key === '5') nivelArbol = 5;
   
-  // angulo arbol
+  // cambiar angulo del arbol
   if (key === 'a' || key === 'A') anguloArbol -= 0.1;
   if (key === 'd' || key === 'D') anguloArbol += 0.1;
   
-  // mas inutilidades
+  // reiniciar contador
   if(key === 'x') {
-    contadorInutil = 0;
+    contadorExtra = 0;
   }
 }
