@@ -1,11 +1,19 @@
-function setup(){
-background(255);
-fill(0,128,0);
-rect(10,10,width,height/3);
+function setup() {
+  createCanvas(600, 300);
+}
 
-fill(255);
-rect(0,height/10,width,height/10);
+function draw() {
+  background(255);
 
-fill(255,0,0);
-rect(2*height/10,width,height/10);
+  fill(0, 217, 255);
+  rect(0,0,width,height/3);
+
+  fill(255);
+  rect(0,height/3, width, height/3);
+
+  fill(217,255,0);
+  circle(300,150,60);
+
+  fill(0, 217, 255);
+  rect(0,2*height/3,width,height/3);
 }

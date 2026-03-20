@@ -1,13 +1,14 @@
+let s = 1;
 function setup() {
- createCanvas(600, 400);
+ createCanvas(600, 300);
 }
 function draw() {
  background(240);
- let theta = frameCount * 0.03;
-  let x = 100;
- let y = 0;
- let xr = x * cos(theta) - y * sin(theta);
- let yr = x * sin(theta) + y * cos(theta);
+ s *= 1.01; // crecimiento exponencial
+ push();
  translate(width/2, height/2);
- circle(xr, yr, 20);
+ scale(s);
+ rectMode(CENTER);
+ rect(0, 0, 50, 30);
+ pop();
 }

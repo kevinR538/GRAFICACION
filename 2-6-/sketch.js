@@ -1,9 +1,20 @@
-function draw() {
- background(245);
- bezier(80,300, 180,80, 420,80, 520,300);
- let t = (frameCount % 200) / 200;
- let x = bezierPoint(80,180,420,520,t);
- let y = bezierPoint(300,80,80,300,t);
- fill(255,0,0);
- circle(x,y,15);
+let pts = [];
+function setup(){
+ createCanvas(600,400);
+ pts = [
+ createVector(50,200),
+ createVector(150,100),
+ createVector(300,300),
+ createVector(450,150),
+ createVector(550,250)
+ ];
+}
+let t = 0;
+function draw(){
+    background(245);
+ let x = curvePoint(50,100,300,500,t);
+ let y = curvePoint(200,300,80,260,t);
+ circle(x,y,20);
+ t += 0.01;
+ if(t>1) t=0;
 }
