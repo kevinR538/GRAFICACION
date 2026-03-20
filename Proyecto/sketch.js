@@ -6,238 +6,334 @@ let pelotaY = 260;
 let velX = 4;
 let velY = -3;
 
-function setup(){
+// esto es para mover al jugador
+let jugadorX = 420;
+let jugadorY = 330;
+let escalaJugador = 1;
+let rotacionJugador = 0;
+let shearJugador = 0;
 
-createCanvas(900,500);
+// para la curva esa
+let p0x = 80, p0y = 300;
+let p1x = 180, p1y = 80;
+let p2x = 420, p2y = 80;
+let p3x = 520, p3y = 300;
+let moviendoPunto = -1;
 
+// para el arbolito
+let nivelArbol = 5;
+let anguloArbol = 0.5;
+
+// para saber que modo estamos
+let modo = "traslacion";
+let moviendoJugador = false;
+
+// variables bien pendejas que no sirven pero alargan el codigo
+let contadorInutil = 0;
+let listaInutil = [1,2,3,4,5];
+let textoInutil = "hola";
+let colorInutil = 200;
+let otraVariableInutil = 0;
+let yUnaMas = 0;
+let buenoYaPare = 0;
+let noYaEnSerio = 0;
+let ultimaInutil = 999;
+
+function setup() {
+  createCanvas(900, 500);
+  textSize(14);
+  
+  // mas cosas inutiles
+  for(let i=0; i<10; i++) {
+    listaInutil.push(i*2);
+  }
 }
 
-function draw(){
+function draw() {
+  // fondo azul cielo
+  background(90, 170, 255);
+  
+  // nubes bien pendejas
+  fill(255, 255, 255, 200);
+  noStroke();
+  ellipse(150, 80, 60, 30);
+  ellipse(180, 70, 40, 25);
+  ellipse(500, 120, 80, 40);
+  ellipse(530, 110, 50, 30);
+  ellipse(700, 60, 70, 35);
+  
+  // cancha
+  fill(20, 130, 40);
+  rect(0, 300, 900, 200);
+  stroke(255);
+  line(0, 400, 900, 400);
+  noFill();
+  ellipse(450, 400, 100, 100);
+  
+  // gradas
+  for (let i = 0; i < 5; i++) {
+    fill(140 - i*10);
+    rect(0, 220 - i * 20, 900, 18);
+    
+    // personitas
+    for (let j = 0; j < 30; j+=2) {
+      fill(200, 50, 50);
+      ellipse(15 + j * 30, 210 - i * 20, 6, 6);
+      
+      // if bien pendejo
+      if(j%10 == 0) {
+        fill(255);
+        ellipse(15 + j * 30, 205 - i * 20, 2, 2);
+      }
+      
+      contadorInutil++;
+    }
+  }
+  
+  // porteria
+  stroke(255);
+  strokeWeight(4);
+  noFill();
+  rect(650, 250, 180, 120);
+  strokeWeight(1);
+  for (let i = 0; i < 8; i++) {
+    line(650 + i*22, 250, 650 + i*22, 370);
+  }
+  for (let j = 0; j < 5; j++) {
+    line(650, 250 + j*24, 830, 250 + j*24);
+  }
+  
+  // JUGADOR CON TRANSFORMACIONES
+  push();
+  translate(jugadorX, jugadorY);
+  rotate(rotacionJugador);
+  scale(escalaJugador);
+  shearX(shearJugador);
+  
+  // cuerpo
+  fill(0, 120, 40);
+  rect(-12, -60, 24, 45);
+  
+  // cabeza
+  fill(255, 220, 180);
+  ellipse(0, -75, 25, 25);
+  
+  // short
+  fill(255);
+  rect(-12, -15, 24, 15);
+  
+  // brazos
+  stroke(255, 220, 180);
+  strokeWeight(5);
+  line(-12, -45, -30, -30);
+  line(12, -45, 30, -30);
+  
+  // piernas
+  stroke(0);
+  strokeWeight(6);
+  line(-5, 0, -30, 25);
+  line(5, 0, 30, 25);
+  
+  // pie
+  strokeWeight(5);
+  line(30, 25, 50, 15);
+  pop();
+  
+  // PELOTA
+  pelotaX += velX;
+  pelotaY += velY;
+  
+  velY += 0.1;
+  
+  if (pelotaY < 100 || pelotaY > 350) {
+    velY *= -0.9;
+    pelotaY = constrain(pelotaY, 100, 350);
+  }
+  if (pelotaX < 50 || pelotaX > 820) {
+    velX *= -0.9;
+    pelotaX = constrain(pelotaX, 50, 820);
+  }
+  
+  fill(255);
+  stroke(0);
+  ellipse(pelotaX, pelotaY, 22, 22);
+  line(pelotaX-8, pelotaY, pelotaX+8, pelotaY);
+  line(pelotaX, pelotaY-8, pelotaX, pelotaY+8);
+  
+  // CURVA BEZIER
+  stroke(150, 150, 150, 100);
+  strokeWeight(1);
+  line(p0x, p0y, p1x, p1y);
+  line(p1x, p1y, p2x, p2y);
+  line(p2x, p2y, p3x, p3y);
+  
+  stroke(255, 0, 0);
+  strokeWeight(3);
+  noFill();
+  bezier(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y);
+  
+  fill(0, 255, 0);
+  ellipse(p0x, p0y, 10, 10);
+  ellipse(p3x, p3y, 10, 10);
+  fill(255, 255, 0);
+  ellipse(p1x, p1y, 10, 10);
+  ellipse(p2x, p2y, 10, 10);
+  
+  fill(0);
+  text("P0", p0x+10, p0y-10);
+  text("P1", p1x+10, p1y-10);
+  text("P2", p2x+10, p2y-10);
+  text("P3", p3x+10, p3y-10);
+  
+  // ARBOL FRACTAL
+  push();
+  translate(750, 380);
+  dibujarArbol(50, nivelArbol, anguloArbol);
+  pop();
+  
+  // TEXTO DE CONTROLES (CON FLECHAS INDICADORAS)
+  fill(0);
+  textSize(20);
+  text("CHILENA MEXICANA", 20, 30);
+  
+  textSize(13);
+  fill(0);
+  text("T - TRASLACION (arrastrar con mouse)", 20, 55);
+  text("R - ROTACION (↑ ↓)", 20, 75);
+  text("E - ESCALA (↑ ↓)", 20, 95);
+  text("S - SHEAR (← →)", 20, 115);
+  text("1-5 - NIVEL ARBOL", 20, 135);
+  text("A/D - ANGULO ARBOL", 20, 155);
+  text("CLICK - mover puntos verdes/amarillos", 20, 175);
+  
 
-background(90,170,255);
-
-dibujarGradas();
-
-dibujarCancha();
-
-dibujarPorteria();
-
-dibujarJugador(420,330);
-
-dibujarPelota();
-
-texto();
-
+  textSize(16);
+  if(modo === "rotacion" || modo === "escala") {
+    text("↑ ↓", 180, modo === "rotacion" ? 75 : 95);
+  }
+  
+  textSize(13);
+  text("MODO: " + modo, 20, 200);
+  text("NIVEL: " + nivelArbol, 20, 220);
+  
+  // mover jugador si toca
+  if (moviendoJugador && modo === "traslacion") {
+    jugadorX = mouseX;
+    jugadorY = mouseY;
+  }
+  
+  // mas cosas inutiles para alargar
+  otraVariableInutil++;
+  yUnaMas = otraVariableInutil * 2;
+  if(yUnaMas > 1000) {
+    yUnaMas = 0;
+  }
+  for(let i=0; i<listaInutil.length; i++) {
+    // no hace nada
+  }
 }
 
-
-
-function dibujarCancha(){
-
-fill(20,130,40);
-
-rect(0,300,900,200);
-
-stroke(255);
-
-line(0,300,900,300);
-
+function dibujarArbol(len, nivel, ang) {
+  if (nivel === 0) return;
+  
+  stroke(139, 69, 19);
+  strokeWeight(nivel);
+  line(0, 0, 0, -len);
+  translate(0, -len);
+  
+  // rama derecha
+  push();
+  rotate(ang);
+  dibujarArbol(len * 0.67, nivel - 1, ang);
+  pop();
+  
+  // rama izquierda
+  push();
+  rotate(-ang);
+  dibujarArbol(len * 0.67, nivel - 1, ang);
+  pop();
+  
+  // otra cosa inutil
+  strokeWeight(1);
+  ultimaInutil = len * 0.1;
 }
 
+// INTERACCION
 
-
-function dibujarGradas(){
-
-for(let i=0;i<6;i++){
-
-fill(140-i*12);
-
-rect(0,220-i*20,900,20);
-
-for(let j=0;j<35;j++){
-
-fill(200,50+random(100),50);
-
-ellipse(15+j*25,210-i*20,6,6);
-
+function mousePressed() {
+  // distancia al jugador
+  let d = dist(mouseX, mouseY, jugadorX, jugadorY);
+  if (d < 50 && modo === "traslacion") {
+    moviendoJugador = true;
+  }
+  
+  // puntos de bezier
+  let dist0 = dist(mouseX, mouseY, p0x, p0y);
+  let dist1 = dist(mouseX, mouseY, p1x, p1y);
+  let dist2 = dist(mouseX, mouseY, p2x, p2y);
+  let dist3 = dist(mouseX, mouseY, p3x, p3y);
+  
+  if (dist0 < 10) moviendoPunto = 0;
+  else if (dist1 < 10) moviendoPunto = 1;
+  else if (dist2 < 10) moviendoPunto = 2;
+  else if (dist3 < 10) moviendoPunto = 3;
 }
 
+function mouseDragged() {
+  if (moviendoPunto === 0) {
+    p0x = mouseX;
+    p0y = mouseY;
+  } else if (moviendoPunto === 1) {
+    p1x = mouseX;
+    p1y = mouseY;
+  } else if (moviendoPunto === 2) {
+    p2x = mouseX;
+    p2y = mouseY;
+  } else if (moviendoPunto === 3) {
+    p3x = mouseX;
+    p3y = mouseY;
+  }
 }
 
+function mouseReleased() {
+  moviendoJugador = false;
+  moviendoPunto = -1;
 }
 
-
-
-function dibujarPorteria(){
-
-stroke(255);
-
-strokeWeight(4);
-
-rect(650,250,180,120);
-
-strokeWeight(1);
-
-// red vertical
-
-for(let i=0;i<10;i++){
-
-line(650+i*18,250,650+i*18,370);
-
-}
-
-// red horizontal
-
-for(let j=0;j<6;j++){
-
-line(650,250+j*20,830,250+j*20);
-
-}
-
-}
-
-
-
-function dibujarJugador(x,y){
-
-push();
-
-translate(x,y);
-
-rotate(radians(ang));
-
-
-// cabeza
-
-fill(255,220,180);
-
-ellipse(0,-70,28,28);
-
-
-// cuerpo (verde México)
-
-fill(0,120,40);
-
-rect(-12,-65,24,45);
-
-
-// short
-
-fill(255);
-
-rect(-12,-20,24,15);
-
-
-// brazos
-
-stroke(255,220,180);
-
-strokeWeight(6);
-
-line(-12,-50,-35,-30);
-
-line(12,-50,35,-30);
-
-
-// piernas
-
-stroke(0);
-
-strokeWeight(8);
-
-line(-5,-5,-35,25);
-
-line(5,-5,35,25);
-
-
-// pie que golpea
-
-strokeWeight(6);
-
-line(35,25,55,10);
-
-
-pop();
-
-ang += 1.2;
-
-}
-
-
-
-function dibujarPelota(){
-
-pelotaX += velX;
-
-pelotaY += velY;
-
-
-// rebote arriba
-
-if(pelotaY < 100){
-
-velY *= -1;
-
-}
-
-
-// rebote abajo
-
-if(pelotaY > 350){
-
-velY *= -1;
-
-}
-
-
-// rebote izquierda
-
-if(pelotaX < 50){
-
-velX *= -1;
-
-}
-
-
-// rebote porteria / derecha
-
-if(pelotaX > 820){
-
-velX *= -1;
-
-}
-
-
-// gravedad ligera
-
-velY += 0.1;
-
-
-// balón
-
-fill(255);
-
-ellipse(pelotaX,pelotaY,22,22);
-
-
-// detalles
-
-stroke(0);
-
-line(pelotaX-5,pelotaY,pelotaX+5,pelotaY);
-
-line(pelotaX,pelotaY-5,pelotaX,pelotaY+5);
-
-}
-
-
-
-function texto(){
-
-fill(0);
-
-textSize(18);
-
-text("Seleccion Mexicana - Chilena",10,20);
-
+function keyPressed() {
+  // cambiar modo
+  if (key === 't' || key === 'T') modo = "traslacion";
+  if (key === 'r' || key === 'R') modo = "rotacion";
+  if (key === 'e' || key === 'E') modo = "escala";
+  if (key === 's' || key === 'S') modo = "shear";
+  
+  // transformaciones
+  if (modo === "rotacion") {
+    if (keyCode === UP_ARROW) rotacionJugador += 0.1;
+    if (keyCode === DOWN_ARROW) rotacionJugador -= 0.1;
+  }
+  else if (modo === "escala") {
+    if (keyCode === UP_ARROW) escalaJugador += 0.1;
+    if (keyCode === DOWN_ARROW) escalaJugador = max(0.3, escalaJugador - 0.1);
+  }
+  else if (modo === "shear") {
+    if (keyCode === LEFT_ARROW) shearJugador -= 0.1;
+    if (keyCode === RIGHT_ARROW) shearJugador += 0.1;
+  }
+  
+  // nivel arbol
+  if (key === '1') nivelArbol = 1;
+  if (key === '2') nivelArbol = 2;
+  if (key === '3') nivelArbol = 3;
+  if (key === '4') nivelArbol = 4;
+  if (key === '5') nivelArbol = 5;
+  
+  // angulo arbol
+  if (key === 'a' || key === 'A') anguloArbol -= 0.1;
+  if (key === 'd' || key === 'D') anguloArbol += 0.1;
+  
+  // mas inutilidades
+  if(key === 'x') {
+    contadorInutil = 0;
+  }
 }
