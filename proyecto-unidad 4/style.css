@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #02050f;
+}
+
+#gui {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 260px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: sans-serif;
+  z-index: 100;
+  pointer-events: none; 
+}
+
+h2 { margin: 0 0 10px 0; font-size: 18px; color: #ffd700; }
+hr { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 10px; }
+.seccion { margin-bottom: 10px; }
+.titulo-teclado { color: #96ff96; font-weight: bold; }
+.titulo-mouse { color: #9696ff; font-weight: bold; }
+p { margin: 3px 0; font-size: 13px; }
+#posicion { color: #ffc864; font-weight: bold; margin-top: 10px; }
