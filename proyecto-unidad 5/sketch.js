@@ -1,22 +1,10 @@
-// ============================================================
-//  PROYECTO INTEGRADOR — ESCENA ANIMADA INTERACTIVA 3D v2
-//  Tema: FC Barcelona — Camp Nou Experience
-//  Tecnología: p5.js WEBGL
-//  CAMBIOS v2:
-//    - Controles corregidos: flechas mueven el balón, W/S ajustan velocidad
-//    - Modelos de jugadores mejorados: zapatillas, espinilleras, pantalón,
-//      camiseta con franja, brazos articulados (brazo+codo+antebrazo+mano),
-//      cabeza con pelo, ojos y boca
-//    - Jugadores se orientan hacia el balón (rotateY)
-//    - Separación de colisiones entre jugadores (algoritmo de repulsión)
-// ============================================================
 
-// ─── VARIABLES GLOBALES ──────────────────────────────────────
+// ─── VARIABLES GLOBALES
 let ball, players=[], particles=[], trailPos=[], stars=[];
 let camFree=false, scored=false, scoredTimer=0;
 let speed=3, frameN=0, goals=0;
 let kickActive=false, kickVY=0;
-let keys={};   // mapa continuo de teclas presionadas
+let keys={};  
 
 const P_RAD=30; // radio de separación entre jugadores
 
@@ -27,7 +15,7 @@ function setup(){
 
   ball={x:0,y:0,z:0,vx:0,vy:0,vz:0,r:18};
 
-  // 3 jugadores posicionados en triángulo para no solaparse
+  // 3 jugadores 
   players=[
     {x:-130,y:0,z:-70, col:[0,77,152],   trim:[252,191,0],  num:'10', phase:0,   vx:0,vz:0},
     {x: 130,y:0,z:-70, col:[165,0,68],   trim:[255,255,255],num:'9',  phase:1.2, vx:0,vz:0},
@@ -75,9 +63,7 @@ function draw(){
   if(scored&&--scoredTimer<=0) scored=false;
 }
 
-// ─── INPUT ───────────────────────────────────────────────────
-// Se usa un mapa de teclas para input continuo (flechas) y
-// keyPressed/keyReleased para detectar eventos discretos.
+
 
 function keyPressed(){
   keys[keyCode]=true;
@@ -104,12 +90,12 @@ function keyReleased(){
 }
 
 function processInput(){
-  // Flechas mueven el balón
+  // Flechas para que  mueven el balón
   if(keys[LEFT_ARROW]  || keys[37]) ball.vx=lerp(ball.vx,-speed,0.18);
   if(keys[RIGHT_ARROW] || keys[39]) ball.vx=lerp(ball.vx, speed,0.18);
   if(keys[UP_ARROW]    || keys[38]) ball.vz=lerp(ball.vz,-speed,0.18);
   if(keys[DOWN_ARROW]  || keys[40]) ball.vz=lerp(ball.vz, speed,0.18);
-  // W/S ajustan velocidad máxima
+ 
   if(keys['w']) speed=min(speed+0.04,9);
   if(keys['s']) speed=max(speed-0.04,1);
 }
@@ -205,7 +191,7 @@ function drawPlayers(){
     let armSwing=Math.sin(pl.phase)*0.45;
     let c=pl.col, tr=pl.trim;
 
-    // Orientar hacia el balón
+    // Orientarse hacia el balón
     let ang=Math.atan2(ball.x-pl.x, ball.z-pl.z);
     rotateY(ang);
 
