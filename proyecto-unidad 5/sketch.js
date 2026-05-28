@@ -1,4 +1,4 @@
-
+//proyecto unidad 5-romero lara kevin omar
 // ─── VARIABLES GLOBALES
 let ball, players=[], particles=[], trailPos=[], stars=[];
 let camFree=false, scored=false, scoredTimer=0;
